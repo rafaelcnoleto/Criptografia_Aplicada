@@ -71,8 +71,8 @@ implementações de φ concordam até 299, e `|Z*ₘ| = φ(m)` até 199.
 `Divisao_Modular` (seção 1) calcula o inverso multiplicativo com
 `pow(b, -1, n)`, da biblioteca padrão. Precisa passar a chamar a função da
 seção 5 quando ela chegar — o produto da missão é implementar os algoritmos,
-não chamar a biblioteca padrão. Está marcado no código com
-`SUBSTITUTO TEMPORARIO`.
+não chamar a biblioteca padrão. Está marcado no código com o comentário
+`# TROCAR`.
 
 ### Observações para o grupo
 
