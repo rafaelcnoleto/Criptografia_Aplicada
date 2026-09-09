@@ -268,7 +268,7 @@ Qualquer par de funcionários chega ao mesmo valor (o produto de dois módulos q
 
 ### Segurança do esquema
 
-Um funcionário **sozinho** conhece no máximo `x ≡ 12 (mod 19)`, cujo módulo `19 < 69` — há várias possibilidades no intervalo `(19, 77)`, logo a senha **não** é recuperável com uma única chave. É exatamente essa a função do limiar `k = 2`.
+Um funcionário **sozinho** conhece no máximo `x ≡ 12 (mod 19)`, cujo módulo `19 < 69`. No intervalo `(19, 77)` isso deixa os candidatos **31, 50 e 69**, indistinguíveis entre si — logo a senha **não** é recuperável com uma única chave. É exatamente essa a função do limiar `k = 2`.
 
 ### Resposta
 
@@ -334,7 +334,7 @@ x = 2145 + 728 + 2772 = 5645
 
 Existem `C(5,3) = 10` trios possíveis. O menor produto de módulos é `7·11·13 = 1001 > 640`, portanto **qualquer** trio recupera `s = 640` de forma única (todos os 10 trios foram verificados).
 
-Já **dois** funcionários não conseguem: o maior produto de dois módulos é `17 × 19 = 323 < 640`. A solução obtida seria `640 mod 323 = 317`, e existiriam múltiplos candidatos (`317, 640, 963, ...`) no intervalo — impossível decidir qual é a senha. Isso confirma o limiar `k = 3`.
+Já **dois** funcionários não conseguem: o maior produto de dois módulos é `17 × 19 = 323 < 640`. A dupla obteria apenas `640 mod 323 = 317`, isto é `x = 317 + 323k`. Dentro do intervalo do limiar `(323, 1001)` restam os candidatos **640 e 963** — impossível decidir qual é a senha. Isso confirma o limiar `k = 3`.
 
 ### Resposta
 
@@ -428,7 +428,7 @@ Existem `C(6,3) = 20` trios possíveis e **todos** recuperam `s = 1500` (verific
 
 ### Segurança: por que 2 chaves não bastam
 
-O maior produto de duas chaves é `19 × 23 = 437 < 1500`. Dois gerentes obteriam apenas `x ≡ 1500 mod 437 = 189`, com infinitos candidatos `189, 626, 1063, 1500, 1937, ...` — sem meio de identificar a senha correta. O limiar `k = 3` está, portanto, corretamente estabelecido.
+O maior produto de duas chaves é `19 × 23 = 437 < 1500`. Dois gerentes obteriam apenas `x ≡ 189 (mod 437)`, isto é `x = 189 + 437k`. Dentro do intervalo do limiar `(437, 2145)` restam **quatro** candidatos — `626, 1063, 1500 e 1937` — sem meio de identificar a senha correta. O limiar `k = 3` está, portanto, corretamente estabelecido.
 
 ### Resposta
 
