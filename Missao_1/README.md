@@ -3,47 +3,76 @@
 PBL **SecureDocs** — TechSecure. Biblioteca de teoria dos números que serve de
 base para os mecanismos criptográficos das próximas missões.
 
-## Divisão do grupo
+Tudo em um arquivo só: **`Missao01.py`**.
 
-Tudo vive em um único arquivo: **`Missao01.py`**.
+## Numeração das seções
 
-| Integrante | Tópicos | Seção | Situação |
+As seções seguem a ordem da lista de tópicos do enunciado. Os números
+ausentes são os tópicos que os colegas ainda vão incluir.
+
+| # | Tópico | Integrante | Situação |
 |---|---|---|---|
-| Gabriel Vicentte | Aritmética modular, MDC, Algoritmo de Euclides | 1, 2, 3 | ✅ integrado |
-| Pedro Cardoso | Inverso multiplicativo, Euclides estendido | 4 | ⏳ pendente |
-| Daniel Carvalho | Exponenciação modular, Teorema Chinês do Resto | 5 | ⏳ pendente |
-| **Rafael de Castro** | **Função Phi de Euler, Números Primos** | **6, 7, 8, 9** | ✅ integrado |
+| 1 | Aritmética modular | Gabriel Vicentte | ✅ no arquivo |
+| 2 | MDC | Gabriel Vicentte | ✅ no arquivo |
+| 3 | Algoritmo de Euclides | Gabriel Vicentte | ✅ no arquivo |
+| 4 | Algoritmo estendido de Euclides | Pedro Cardoso | a incluir |
+| 5 | Inverso multiplicativo | Pedro Cardoso | a incluir |
+| **6** | **Números primos** | **Rafael de Castro** | ✅ no arquivo |
+| **7** | **Função phi de Euler** | **Rafael de Castro** | ✅ no arquivo |
+| 8 | Exponenciação modular | Daniel Carvalho | a incluir |
+| 9 | Teorema Chinês do Resto | Daniel Carvalho | a incluir |
 
-## Dependências entre as partes
+## Funções das seções 6 e 7 (Rafael)
 
+### Seção 6 — Números primos
+
+| Função | O que faz | Usa |
+|---|---|---|
+| `Divisores(n)` | Lista os divisores positivos de n | — |
+| `Eh_Primo(n)` | Primalidade pela definição, até √n | — |
+| `Fatorar(n)` | Fatoração em primos, `{primo: expoente}` | — |
+| `Sao_Coprimos(a, b)` | Verifica MDC(a,b) = 1 | `MDC` (seção 2) |
+| `Lista_De_Primos(limite)` | Primos até o limite | — |
+
+### Seção 7 — Função phi de Euler
+
+| Função | O que faz | Usa |
+|---|---|---|
+| `Phi_de_Euler(n)` | Fórmula ∏(pᵉ − pᵉ⁻¹) via fatoração | `Fatorar` |
+| `Phi_por_Definicao(n)` | Contagem de coprimos (valida a anterior) | `Sao_Coprimos` |
+| `Conjunto_Z_Estrela(m)` | Lista os elementos de Z*ₘ | `Sao_Coprimos` |
+| `Phi_de_Produto_De_Primos(p,q)` | (p−1)(q−1) | `Eh_Primo` |
+
+A única dependência externa é o `MDC` da seção 2, que já está no arquivo.
+As seções 6 e 7 não dependem das partes ainda pendentes.
+
+## Testes
+
+```bash
+cd Missao_1
+python testes_primos_e_phi.py
 ```
-seção 2  MDC (Gabriel) ────────────► seção 6  Sao_Coprimos (Rafael)
-seção 5  Exp. modular (Daniel) ───► seções 8 e 9  Fermat e Miller-Rabin (Rafael)
-seção 4  Inverso mult. (Pedro) ───► seção 1  Divisao_Modular (Gabriel)
-```
 
-## Pendências antes da entrega
+Sem instalar nada. Os valores esperados vêm do material da disciplina:
 
-Dois pontos ainda usam a biblioteca padrão do Python e estão marcados no
-código com `SUBSTITUTO TEMPORARIO`. Nenhum pode ficar assim: o produto da
-missão é **implementar** os algoritmos.
+- `φ(26) = 12`, `φ(21) = 12`, `φ(8) = 4` — slide "Função phi de Euler"
+- Os 12 inteiros de Z*₂₁: `{1,2,4,5,8,10,11,13,16,17,19,20}` — mesmo slide
+- `Z*₂₆ = {1,3,5,7,9,11,15,17,19,21,23,25}` — `fundamentos_matematicos.pdf` §3.1.9
+- `24200 = 2³ · 5² · 11²` e `11011 = 7 · 11² · 13` — slide "Números Primos"
+- `8` e `15` relativamente primos — slide "Números Relativamente Primos"
+- `mdc(300, 18) = 6` — slide "Divisor Comum e Máximo Divisor Comum"
 
-| Onde | Hoje | Precisa virar | Responsável |
-|---|---|---|---|
-| Seção 5 — `Exponenciacao_Modular` | `pow(b, e, n)` | quadrado e multiplicação binária | Daniel |
-| Seção 1 — `Divisao_Modular` | `pow(b, -1, n)` | `Inverso_Multiplicativo(b, n)` | Pedro |
+Além dos valores do material, os testes verificam propriedades gerais: o
+produto dos fatores reconstrói `n` para todo n até 499, as duas
+implementações de φ concordam até 299, e `|Z*ₘ| = φ(m)` até 199.
 
-Assinaturas combinadas:
+## Pendência de integração
 
-```python
-Exponenciacao_Modular(base, expoente, modulo) -> int
-Inverso_Multiplicativo(a, m) -> int
-Algoritmo_Estendido_de_Euclides(a, b) -> (d, alfa, beta)   # alfa*a + beta*b = d
-```
-
-Basta colar as implementações nas seções 4 e 5 e apagar os substitutos —
-o resto do arquivo já chama pelos nomes certos. A seção 12 dos testes avisa
-se algum substituto ainda estiver ativo.
+`Divisao_Modular` (seção 1) calcula o inverso multiplicativo com
+`pow(b, -1, n)`, da biblioteca padrão. Precisa passar a chamar a função da
+seção 5 quando ela chegar — o produto da missão é implementar os algoritmos,
+não chamar a biblioteca padrão. Está marcado no código com
+`SUBSTITUTO TEMPORARIO`.
 
 ### Observações para o grupo
 
@@ -54,110 +83,9 @@ se algum substituto ainda estiver ativo.
   Sugestão: `MDC` pela definição e `Algoritmo_de_Euclides` pelas divisões
   sucessivas, comparando os dois.
 
-## Aulas já dadas
+## Ligação com as próximas missões
 
-O módulo é organizado conforme o conteúdo visto até agora:
-
-| Conteúdo | Onde | Dado em sala? |
-|---|---|---|
-| Primos, fatoração única, coprimos | `Introducao_Crip_Teoria_Num.pdf` | ✅ |
-| φ de Euler e a fórmula do produto | `Introducao`, `Fermat_Grupo_Corpos` | ✅ |
-| Teoremas de Euler e de Fermat (com demonstração) | ambos | ✅ |
-| Exponenciação modular | `Introducao`, `Fermat_Grupo_Corpos` | ✅ |
-| Miller-Rabin / testes de primalidade | só `1_RSA.pdf` | ❌ ainda não |
-
-`fundamentos_matematicos.pdf` é material de consulta, não dado em sala.
-
-## Funções entregues (Rafael)
-
-### Seções 6 e 7 — Núcleo (conteúdo de sala, determinístico)
-
-| Função | O que faz | Depende de |
-|---|---|---|
-| `Divisores(n)` | Lista os divisores positivos de n | — |
-| `Eh_Primo(n)` | Primalidade pela definição, até √n | — |
-| `Fatorar(n)` | Fatoração em primos, `{primo: expoente}` | — |
-| `Sao_Coprimos(a, b)` | Verifica MDC(a,b) = 1 | MDC |
-| `Lista_De_Primos(limite)` | Primos até o limite | — |
-| `Phi_de_Euler(n)` | Fórmula ∏(pᵉ − pᵉ⁻¹) via fatoração | — |
-| `Phi_por_Definicao(n)` | Contagem de coprimos (valida a anterior) | MDC |
-| `Conjunto_Z_Estrela(m)` | Lista os elementos de Z*ₘ | MDC |
-| `Phi_de_Produto_De_Primos(p,q)` | (p−1)(q−1) | — |
-
-**Nenhuma função destas seções depende do Daniel.** Os dois tópicos do
-Rafael ficam completos mesmo que a exponenciação modular atrase.
-
-### Seção 8 — Aplicações dos teoremas de Fermat e Euler
-
-Os dois teoremas foram dados em sala, com demonstração. Usam a
-exponenciação modular da seção 5, que também já foi vista em aula.
-
-| Função | O que faz | Depende de |
-|---|---|---|
-| `Verifica_Teorema_de_Euler(a, n)` | Confere a^φ(n) ≡ 1 (mod n) | **exp. modular** |
-| `Verifica_Teorema_de_Fermat(a, p)` | Confere aᵖ ≡ a (mod p) | **exp. modular** |
-| `Teste_de_Fermat(n, base)` | Primalidade pela contrapositiva do teorema | **exp. modular** |
-| `Eh_Provavelmente_Primo_Fermat(n, r)` | Fermat com bases aleatórias | **exp. modular** |
-
-### Seção 9 — Apêndice: Miller-Rabin (`1_RSA.pdf`, ainda não dado em sala)
-
-| Função | O que faz |
-|---|---|
-| `Decompor_Em_Potencia_De_Dois(x)` | Escreve x = 2ᵏ · m com m ímpar |
-| `Miller_Rabin(n, base)` | Uma rodada do teste |
-| `Eh_Provavelmente_Primo(n, rodadas)` | Miller-Rabin com bases aleatórias |
-| `Rodadas_Recomendadas(bits)` | Tabela do slide 27 (erro < 2⁻⁸⁰) |
-| `Probabilidade_De_Ser_Primo(bits)` | 2/ln(p) — slide 26 |
-| `Gerar_Primo(bits)` | Sorteia primo provável do tamanho pedido |
-
-## Testes
-
-```bash
-cd Missao_1
-python testes_primos_e_phi.py
-```
-
-Os valores esperados vêm do material da disciplina:
-
-- `φ(26) = 12`, `φ(21) = 12`, `φ(8) = 4` — slide "Função phi de Euler"
-- `Z*₂₆ = {1,3,5,7,9,11,15,17,19,21,23,25}` — `fundamentos_matematicos.pdf` §3.1.9
-- `3⁵ ≡ 3 (mod 5)`, `10⁵ ≡ 0 (mod 5)`, `7¹⁸ ≡ 1 (mod 19)` — slide "Teorema de Fermat"
-- `24200 = 2³ · 5² · 11²` e `11011 = 7 · 11² · 13` — slide "Números Primos"
-- `φ(7 × 17) = 96` — exemplo do RSA, `1_RSA.pdf` slide 19
-- Miller-Rabin sobre 91 com bases 12, 17, 38, 39 — exercício do slide 28
-- `P(primo, 512 bits) ≈ 1/177` — slide 26
-
-### Limite do teste de Fermat — o número de Carmichael 561
-
-561 = 3 × 11 × 17 é composto, mas passa no teste de Fermat para
-**todas** as bases coprimas a ele:
-
-| | Bases coprimas que se enganam |
-|---|---|
-| Teste de Fermat | 319 de 319 (**100%**) |
-| Miller-Rabin | 9 de 319 |
-
-Repetir rodadas não resolve: nenhuma base coprima denuncia o 561. O teste
-de Fermat só o rejeita por acidente, quando sorteia uma base que
-compartilha fator com ele — ou seja, quando tropeça na fatoração. É
-exatamente por isso que o Miller-Rabin existe.
-
-### Resultado do exercício do slide 28
-
-Testando 91 (= 7 × 13, composto):
-
-| Base | Resultado | Conclusão |
-|---|---|---|
-| 12 | provavelmente primo | mentirosa forte |
-| 17 | provavelmente primo | mentirosa forte |
-| 38 | provavelmente primo | mentirosa forte |
-| 39 | **composto** | testemunha — detectou |
-
-Três das quatro bases *erram*. É a demonstração de que Miller-Rabin é
-probabilístico: uma rodada não prova nada, e por isso o teste é repetido com
-várias bases aleatórias antes de aceitar um número como primo.
-
-## Ligação com a Missão 2
-
-`Gerar_Primo` e `Phi_de_Produto_De_Primos` são exatamente o primeiro passo da
-geração de chaves do RSA: sortear p e q, calcular n = p·q e φ(n) = (p−1)(q−1).
+`Phi_de_Produto_De_Primos` é o passo da geração de chaves do RSA:
+φ(n) = (p−1)(q−1). Para primos de centenas de bits, o `Eh_Primo`
+determinístico deixa de ser viável e entra o teste de Miller-Rabin, que
+aparece no `1_RSA.pdf` e ainda não foi dado em sala.

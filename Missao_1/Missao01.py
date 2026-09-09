@@ -5,25 +5,30 @@
 # Biblioteca de teoria dos numeros do grupo.
 #
 # ---------------------------------------------------------------------
-# INTEGRANTES E TOPICOS
+# NUMERACAO DAS SECOES
 # ---------------------------------------------------------------------
-#   Gabriel Vicentte  - Aritmetica modular, MDC, Algoritmo de Euclides
-#   Pedro Cardoso     - Inverso multiplicativo, Euclides estendido
-#   Daniel Carvalho   - Exponenciacao modular, Teorema Chines do Resto
-#   Rafael de Castro  - Funcao phi de Euler, Numeros primos
+# As secoes seguem a ordem da lista de topicos do enunciado:
+#
+#   1. aritmetica modular         Gabriel Vicentte   [neste arquivo]
+#   2. MDC                        Gabriel Vicentte   [neste arquivo]
+#   3. algoritmo de Euclides      Gabriel Vicentte   [neste arquivo]
+#   4. algoritmo estendido        Pedro Cardoso      [a incluir]
+#   5. inverso multiplicativo     Pedro Cardoso      [a incluir]
+#   6. numeros primos             Rafael de Castro   [neste arquivo]
+#   7. funcao phi de Euler        Rafael de Castro   [neste arquivo]
+#   8. exponenciacao modular      Daniel Carvalho    [a incluir]
+#   9. Teorema Chines do Resto    Daniel Carvalho    [a incluir]
+#
+# Os numeros ausentes correspondem aos topicos que ainda serao
+# incluidos pelos colegas.
 #
 # ---------------------------------------------------------------------
-# SITUACAO DA INTEGRACAO
+# PENDENCIA DE INTEGRACAO
 # ---------------------------------------------------------------------
-#   [OK]       Gabriel Vicentte
-#   [OK]       Rafael de Castro
-#   [PENDENTE] Pedro Cardoso    - ver secao 4
-#   [PENDENTE] Daniel Carvalho  - ver secao 5
-#
-#   Enquanto as partes pendentes nao chegam, os pontos marcados com
-#   SUBSTITUTO TEMPORARIO usam a biblioteca padrao do Python. Nenhum
-#   deles pode ficar assim na entrega final, porque o produto da missao
-#   e implementar os algoritmos.
+# Divisao_Modular (secao 1) calcula o inverso multiplicativo com
+# pow(b, -1, n), da biblioteca padrao. Precisa passar a chamar a funcao
+# da secao 5, quando ela chegar - o produto da missao e implementar os
+# algoritmos, nao chamar a biblioteca padrao.
 #
 # ---------------------------------------------------------------------
 # REFERENCIAS DO MATERIAL DA DISCIPLINA
@@ -31,12 +36,7 @@
 #   Introducao_Crip_Teoria_Num.pdf   (aula)
 #   Fermat_Grupo_Corpos.pdf          (aula)
 #   fundamentos_matematicos.pdf      (consulta)
-#   1_RSA.pdf                        (ainda nao dado em sala)
 # =====================================================================
-
-
-import math
-import random
 
 
 # #####################################################################
@@ -60,8 +60,8 @@ def Multiplicacao_Modular(a, b, n):
 
 def Divisao_Modular(a, b, n):
     # SUBSTITUTO TEMPORARIO: pow(b, -1, n) calcula o inverso
-    # multiplicativo pela biblioteca padrao. Trocar por
-    # Inverso_Multiplicativo(b, n), da secao 4 (Pedro Cardoso).
+    # multiplicativo pela biblioteca padrao. Trocar pela funcao da
+    # secao 5 (Pedro Cardoso).
     try:
         inverso = pow(b, -1, n)
         return Multiplicacao_Modular(a, inverso, n)
@@ -96,55 +96,8 @@ def Algoritmo_de_Euclides(a, b):
 
 # #####################################################################
 #
-#   SECAO 4 - INVERSO MULTIPLICATIVO E EUCLIDES ESTENDIDO
-#   Pedro Cardoso  --  PENDENTE
-#
-#   Assinaturas combinadas com o grupo:
-#       Algoritmo_Estendido_de_Euclides(a, b) -> (d, alfa, beta)
-#           com alfa*a + beta*b = d = MDC(a, b)
-#       Inverso_Multiplicativo(a, m) -> int
-#
-#   Usado por: Divisao_Modular (secao 1).
-#
-# #####################################################################
-
-
-# #####################################################################
-#
-#   SECAO 5 - EXPONENCIACAO MODULAR E TEOREMA CHINES DO RESTO
-#   Daniel Carvalho  --  PENDENTE
-#
-#   Usado por: secoes 8 e 9 (Rafael).
-#
-# #####################################################################
-
-def Exponenciacao_Modular(base, expoente, modulo):
-    """SUBSTITUTO TEMPORARIO - trocar pela implementacao do Daniel.
-
-    Assinatura combinada com o grupo:
-        Exponenciacao_Modular(base, expoente, modulo) -> int
-
-    O algoritmo de quadrado e multiplicacao binaria esta no slide
-    "Aspectos Computacionais - Exponenciacao" do material de sala:
-
-        d = 1
-        para i = k passo -1 ate 0 faca
-            d = (d x d) mod n
-            se bi = 1 entao
-                d = (d x a) mod n
-            fim se
-        fim para
-        retorna d
-    """
-    return pow(base, expoente, modulo)
-
-
-# #####################################################################
-#
 #   SECAO 6 - NUMEROS PRIMOS
 #   Rafael de Castro
-#
-#   Conteudo dado em sala. Deterministico e sem dependencias.
 #
 # #####################################################################
 
@@ -177,8 +130,6 @@ def Eh_Primo(n):
     n = a * b com a <= b, entao a <= raiz(n).
 
     Deterministico: quando responde, responde com certeza.
-    Custo O(raiz(n)) - instantaneo ate cerca de 10^12, inviavel para
-    os primos de centenas de bits usados no RSA.
     """
     if n < 2:
         return False
@@ -301,221 +252,15 @@ def Conjunto_Z_Estrela(m):
     return [k for k in range(1, m) if Sao_Coprimos(k, m)]
 
 
-def Phi_de_Produto_De_Primos(p, q, verificar=True):
+def Phi_de_Produto_De_Primos(p, q):
     """phi(p*q) = (p-1)(q-1), para p e q primos distintos.
 
     Slide "Funcao phi de Euler": se p e q sao primos, entao
     phi(pq) = phi(p)phi(q) = (p-1)(q-1). Exemplo do material:
     phi(21) = phi(3)phi(7) = 2 * 6 = 12.
-
-    E o atalho usado na geracao de chaves do RSA. Para primos grandes,
-    chame com verificar=False: a verificacao usa Eh_Primo, que e
-    deterministico mas custa O(raiz(n)).
     """
-    if verificar and (not Eh_Primo(p) or not Eh_Primo(q)):
+    if not Eh_Primo(p) or not Eh_Primo(q):
         raise ValueError("p e q precisam ser primos.")
     if p == q:
         raise ValueError("p e q precisam ser distintos.")
     return (p - 1) * (q - 1)
-
-
-# #####################################################################
-#
-#   SECAO 8 - APLICACOES DOS TEOREMAS DE FERMAT E EULER
-#   Rafael de Castro
-#
-#   Os dois teoremas foram dados em sala, com demonstracao. Usam a
-#   exponenciacao modular da secao 5 (Daniel Carvalho).
-#
-# #####################################################################
-
-def Verifica_Teorema_de_Euler(a, n):
-    """Confere que a^phi(n) = 1 (mod n), para a e n relativamente primos.
-
-    Exemplos do material:
-        a = 3, n = 10, phi(10) = 4  -> 3^4  = 81   = 1 mod 10
-        a = 2, n = 11, phi(11) = 10 -> 2^10 = 1024 = 1 mod 11
-    """
-    if not Sao_Coprimos(a, n):
-        raise ValueError("O teorema de Euler exige MDC(a, n) = 1.")
-    return Exponenciacao_Modular(a, Phi_de_Euler(n), n) == 1
-
-
-def Verifica_Teorema_de_Fermat(a, p):
-    """Confere que a^p = a (mod p), para p primo.
-
-    Slide "Teorema de Fermat", item (i): para todo a inteiro,
-    a^p = a (mod p). Exemplos do material:
-        p = 5, a = 3  -> 3^5  = 243    = 3 mod 5
-        p = 5, a = 10 -> 10^5 = 100000 = 0 mod 5
-    """
-    if not Eh_Primo(p):
-        raise ValueError("O teorema de Fermat exige p primo.")
-    return Exponenciacao_Modular(a, p, p) == a % p
-
-
-def Teste_de_Fermat(n, base):
-    """Teste de primalidade derivado do Teorema de Fermat.
-
-    O item (ii) do teorema diz: se p nao divide a, entao
-    a^(p-1) = 1 (mod p). A CONTRAPOSITIVA vira um teste:
-
-        se a^(n-1) != 1 (mod n), entao n NAO e primo.
-
-    Retorna False -> n e COMPOSTO (certeza absoluta).
-    Retorna True  -> n passou no teste para esta base.
-
-    Atencao: a reciproca do teorema e falsa. Um composto pode passar
-    no teste, e nesse caso a base e chamada de mentirosa. Pior ainda,
-    existem compostos que passam para TODA base coprima a eles - os
-    numeros de Carmichael, sendo 561 = 3 * 11 * 17 o menor deles.
-    Por isso este teste sozinho nao serve para o RSA, e o Miller-Rabin
-    da secao 9 existe.
-    """
-    if n < 2:
-        return False
-    if n in (2, 3):
-        return True
-    if n % 2 == 0:
-        return False
-    if base % n == 0:
-        # Base fora do intervalo util; nada a concluir.
-        return True
-
-    return Exponenciacao_Modular(base, n - 1, n) == 1
-
-
-def Eh_Provavelmente_Primo_Fermat(n, rodadas=10):
-    """Teste de Fermat repetido com bases aleatorias."""
-    if n < 2:
-        return False
-    if n in (2, 3):
-        return True
-    if n % 2 == 0:
-        return False
-
-    for _ in range(rodadas):
-        base = random.randrange(2, n - 1)
-        if not Teste_de_Fermat(n, base):
-            return False
-    return True
-
-
-# #####################################################################
-#
-#   SECAO 9 - APENDICE: MILLER-RABIN
-#   Rafael de Castro
-#
-#   Conteudo de 1_RSA.pdf (slides 25 a 28), AINDA NAO DADO EM SALA.
-#   Incluido como preparacao para a geracao de chaves do RSA, onde os
-#   primos tem centenas de bits e Eh_Primo se torna inviavel.
-#
-# #####################################################################
-
-def Decompor_Em_Potencia_De_Dois(numero):
-    """Escreve 'numero' na forma 2^k * m, com m impar. Retorna (k, m)."""
-    k = 0
-    m = numero
-    while m % 2 == 0:
-        m //= 2
-        k += 1
-    return k, m
-
-
-def Miller_Rabin(n, base):
-    """Uma rodada do teste de Miller-Rabin para a base informada.
-
-    Retorna False -> n e COMPOSTO (certeza absoluta).
-    Retorna True  -> n e PROVAVELMENTE PRIMO para esta base.
-
-    Diferenca para o teste de Fermat: alem de conferir a^(n-1) = 1,
-    o algoritmo acompanha as raizes quadradas de 1 ao longo do
-    caminho. Isso derruba os numeros de Carmichael, que enganam o
-    teste de Fermat.
-
-    Se n for composto e o teste retornar True, a base e chamada de
-    mentirosa forte. O exercicio do slide 28 explora esse caso com
-    n = 91 = 7 x 13.
-    """
-    if n < 2:
-        return False
-    if n in (2, 3):
-        return True
-    if n % 2 == 0:
-        return False
-    if base % n == 0:
-        return True
-
-    k, m = Decompor_Em_Potencia_De_Dois(n - 1)
-
-    b = Exponenciacao_Modular(base, m, n)
-    if b == 1 or b == n - 1:
-        return True
-
-    for _ in range(k - 1):
-        b = Exponenciacao_Modular(b, 2, n)
-        if b == n - 1:
-            return True
-
-    return False
-
-
-def Eh_Provavelmente_Primo(n, rodadas=10):
-    """Miller-Rabin repetido com bases aleatorias.
-
-    A probabilidade de um composto passar em todas as rodadas e menor
-    que 4^(-rodadas).
-    """
-    if n < 2:
-        return False
-
-    for primo_pequeno in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):
-        if n == primo_pequeno:
-            return True
-        if n % primo_pequeno == 0:
-            return False
-
-    for _ in range(rodadas):
-        base = random.randrange(2, n - 1)
-        if not Miller_Rabin(n, base):
-            return False
-    return True
-
-
-def Rodadas_Recomendadas(bits):
-    """Numero de rodadas do Miller-Rabin para erro abaixo de 2^-80.
-
-    Tabela do slide 27 do 1_RSA.pdf.
-    """
-    tabela = [(250, 11), (300, 9), (400, 6), (500, 5), (600, 3)]
-    for tamanho, rodadas in tabela:
-        if bits <= tamanho:
-            return rodadas
-    return 3
-
-
-def Probabilidade_De_Ser_Primo(bits):
-    """Probabilidade de um impar aleatorio de 'bits' bits ser primo.
-
-    P(p primo) = 2 / ln(p), com p ~ 2^bits  (slide 26 do 1_RSA.pdf).
-    Para 512 bits o resultado e aproximadamente 1/177.
-    """
-    return 2 / (bits * math.log(2))
-
-
-def Gerar_Primo(bits, rodadas=None):
-    """Sorteia um primo provavel com exatamente 'bits' bits.
-
-    O candidato tem o bit mais significativo e o bit menos significativo
-    forcados em 1: o primeiro garante o tamanho exato, o segundo garante
-    que o numero seja impar.
-    """
-    if bits < 2:
-        raise ValueError("E preciso pelo menos 2 bits.")
-    if rodadas is None:
-        rodadas = Rodadas_Recomendadas(bits)
-
-    while True:
-        candidato = random.getrandbits(bits) | (1 << (bits - 1)) | 1
-        if Eh_Provavelmente_Primo(candidato, rodadas):
-            return candidato
