@@ -1,24 +1,37 @@
 # =====================================================================
-# PBL SecureDocs - MISSAO 1: "Precisamos de matematica"
-# Integrante: Rafael de Castro
-# Topicos: Funcao Phi de Euler | Numeros Primos
+# PBL SecureDocs - TechSecure
+# MISSAO 1: "Precisamos de matematica"
 #
-# O modulo esta dividido em tres partes, conforme o conteudo ja visto:
+# Biblioteca de teoria dos numeros do grupo.
 #
-#   PARTE 1 - NUCLEO DA ENTREGA
-#             So usa conteudo dado em sala (Introducao_Crip_Teoria_Num.pdf
-#             e Fermat_Grupo_Corpos.pdf). Nao depende de nenhum colega.
+# ---------------------------------------------------------------------
+# INTEGRANTES E TOPICOS
+# ---------------------------------------------------------------------
+#   Gabriel Vicentte  - Aritmetica modular, MDC, Algoritmo de Euclides
+#   Pedro Cardoso     - Inverso multiplicativo, Euclides estendido
+#   Daniel Carvalho   - Exponenciacao modular, Teorema Chines do Resto
+#   Rafael de Castro  - Funcao phi de Euler, Numeros primos
 #
-#   PARTE 2 - APLICACOES DOS TEOREMAS DE FERMAT E EULER
-#             Os dois teoremas foram dados em sala, com demonstracao.
-#             Usam a exponenciacao modular (Daniel Carvalho), que
-#             tambem ja foi vista em sala.
+# ---------------------------------------------------------------------
+# SITUACAO DA INTEGRACAO
+# ---------------------------------------------------------------------
+#   [OK]       Gabriel Vicentte
+#   [OK]       Rafael de Castro
+#   [PENDENTE] Pedro Cardoso    - ver secao 4
+#   [PENDENTE] Daniel Carvalho  - ver secao 5
 #
-#   PARTE 3 - APENDICE: MILLER-RABIN
-#             Conteudo de 1_RSA.pdf, AINDA NAO DADO EM SALA. Incluido
-#             como preparacao para a geracao de chaves do RSA.
+#   Enquanto as partes pendentes nao chegam, os pontos marcados com
+#   SUBSTITUTO TEMPORARIO usam a biblioteca padrao do Python. Nenhum
+#   deles pode ficar assim na entrega final, porque o produto da missao
+#   e implementar os algoritmos.
 #
-# Consulta complementar: fundamentos_matematicos.pdf
+# ---------------------------------------------------------------------
+# REFERENCIAS DO MATERIAL DA DISCIPLINA
+# ---------------------------------------------------------------------
+#   Introducao_Crip_Teoria_Num.pdf   (aula)
+#   Fermat_Grupo_Corpos.pdf          (aula)
+#   fundamentos_matematicos.pdf      (consulta)
+#   1_RSA.pdf                        (ainda nao dado em sala)
 # =====================================================================
 
 
@@ -26,50 +39,114 @@ import math
 import random
 
 
-# ---------------------------------------------------------------------
-# DEPENDENCIAS DOS OUTROS INTEGRANTES
-# ---------------------------------------------------------------------
-# Se o Missoes.py do grupo estiver na mesma pasta, as funcoes dos colegas
-# sao usadas automaticamente. Caso contrario, entram os substitutos
-# temporarios abaixo, para que este modulo rode sozinho.
+# #####################################################################
 #
-#   MDC                    -> Gabriel Vicentte  (ja entregue)
-#   Exponenciacao_Modular  -> Daniel Carvalho   (usado apenas nas
-#                                                PARTES 2 e 3)
-# ---------------------------------------------------------------------
+#   SECAO 1 - ARITMETICA MODULAR
+#   Gabriel Vicentte
+#
+# #####################################################################
 
-try:
-    from Missoes import MDC
-except ImportError:
-    def MDC(a, b):
-        """SUBSTITUTO TEMPORARIO - trocar pelo MDC do Gabriel Vicentte."""
-        return abs(a) if b == 0 else MDC(b, a % b)
+def Soma_Modular(a, b, n):
+    return (a + b) % n
 
-try:
-    from Missoes import Exponenciacao_Modular
-except ImportError:
-    def Exponenciacao_Modular(base, expoente, modulo):
-        """SUBSTITUTO TEMPORARIO - trocar pela funcao do Daniel Carvalho.
 
-        Assinatura combinada com o grupo:
-            Exponenciacao_Modular(base, expoente, modulo) -> int
+def Subtracao_Modular(a, b, n):
+    return (a - b) % n
 
-        O algoritmo de quadrado e multiplicacao binaria esta no slide
-        "Aspectos Computacionais - Exponenciacao" do material de sala.
-        """
-        return pow(base, expoente, modulo)
+
+def Multiplicacao_Modular(a, b, n):
+    return (a * b) % n
+
+
+def Divisao_Modular(a, b, n):
+    # SUBSTITUTO TEMPORARIO: pow(b, -1, n) calcula o inverso
+    # multiplicativo pela biblioteca padrao. Trocar por
+    # Inverso_Multiplicativo(b, n), da secao 4 (Pedro Cardoso).
+    try:
+        inverso = pow(b, -1, n)
+        return Multiplicacao_Modular(a, inverso, n)
+    except ValueError:
+        return "A divisão não existe (b e n não são coprimos)"
 
 
 # #####################################################################
 #
-#   PARTE 1 - NUCLEO DA ENTREGA
+#   SECAO 2 - MAXIMO DIVISOR COMUM
+#   Gabriel Vicentte
+#
+# #####################################################################
+
+def MDC(a, b):
+    if b == 0:
+        return a
+    else:
+        return MDC(b, a % b)
+
+
+# #####################################################################
+#
+#   SECAO 3 - ALGORITMO DE EUCLIDES
+#   Gabriel Vicentte
+#
+# #####################################################################
+
+def Algoritmo_de_Euclides(a, b):
+    return MDC(a, b)
+
+
+# #####################################################################
+#
+#   SECAO 4 - INVERSO MULTIPLICATIVO E EUCLIDES ESTENDIDO
+#   Pedro Cardoso  --  PENDENTE
+#
+#   Assinaturas combinadas com o grupo:
+#       Algoritmo_Estendido_de_Euclides(a, b) -> (d, alfa, beta)
+#           com alfa*a + beta*b = d = MDC(a, b)
+#       Inverso_Multiplicativo(a, m) -> int
+#
+#   Usado por: Divisao_Modular (secao 1).
+#
+# #####################################################################
+
+
+# #####################################################################
+#
+#   SECAO 5 - EXPONENCIACAO MODULAR E TEOREMA CHINES DO RESTO
+#   Daniel Carvalho  --  PENDENTE
+#
+#   Usado por: secoes 8 e 9 (Rafael).
+#
+# #####################################################################
+
+def Exponenciacao_Modular(base, expoente, modulo):
+    """SUBSTITUTO TEMPORARIO - trocar pela implementacao do Daniel.
+
+    Assinatura combinada com o grupo:
+        Exponenciacao_Modular(base, expoente, modulo) -> int
+
+    O algoritmo de quadrado e multiplicacao binaria esta no slide
+    "Aspectos Computacionais - Exponenciacao" do material de sala:
+
+        d = 1
+        para i = k passo -1 ate 0 faca
+            d = (d x d) mod n
+            se bi = 1 entao
+                d = (d x a) mod n
+            fim se
+        fim para
+        retorna d
+    """
+    return pow(base, expoente, modulo)
+
+
+# #####################################################################
+#
+#   SECAO 6 - NUMEROS PRIMOS
+#   Rafael de Castro
+#
 #   Conteudo dado em sala. Deterministico e sem dependencias.
 #
 # #####################################################################
-
-# ---------------------------------------------------------------------
-# NUMEROS PRIMOS
-# ---------------------------------------------------------------------
 
 def Divisores(n):
     """Lista todos os divisores positivos de n.
@@ -160,7 +237,7 @@ def Sao_Coprimos(a, b):
     """Verifica se a e b sao relativamente primos, isto e, MDC(a, b) = 1.
 
     Slide "Numeros Relativamente Primos": 8 e 15 sao relativamente
-    primos.
+    primos. Usa o MDC da secao 2 (Gabriel Vicentte).
     """
     return MDC(a, b) == 1
 
@@ -173,9 +250,12 @@ def Lista_De_Primos(limite):
     return [n for n in range(2, limite + 1) if Eh_Primo(n)]
 
 
-# ---------------------------------------------------------------------
-# FUNCAO PHI DE EULER
-# ---------------------------------------------------------------------
+# #####################################################################
+#
+#   SECAO 7 - FUNCAO PHI DE EULER
+#   Rafael de Castro
+#
+# #####################################################################
 
 def Phi_de_Euler(n):
     """Funcao phi de Euler pela formula da fatoracao.
@@ -184,8 +264,6 @@ def Phi_de_Euler(n):
     positivos menores que n e relativamente primos a n.
 
         phi(m) = produto de (pi^ei - pi^(ei - 1))
-
-    Nao depende de nenhum colega: usa apenas Fatorar.
     """
     if n < 1:
         raise ValueError("phi(n) exige n >= 1.")
@@ -202,7 +280,7 @@ def Phi_por_Definicao(n):
     """Funcao phi calculada pela definicao, contando os coprimos.
 
     Serve para validar Phi_de_Euler. Lenta: percorre todos os inteiros
-    de 1 ate n. Usa o MDC do Gabriel Vicentte.
+    de 1 ate n.
     """
     if n < 1:
         raise ValueError("phi(n) exige n >= 1.")
@@ -243,9 +321,11 @@ def Phi_de_Produto_De_Primos(p, q, verificar=True):
 
 # #####################################################################
 #
-#   PARTE 2 - APLICACOES DOS TEOREMAS DE FERMAT E EULER
-#   Teoremas dados em sala, com demonstracao. Usam a exponenciacao
-#   modular do Daniel Carvalho.
+#   SECAO 8 - APLICACOES DOS TEOREMAS DE FERMAT E EULER
+#   Rafael de Castro
+#
+#   Os dois teoremas foram dados em sala, com demonstracao. Usam a
+#   exponenciacao modular da secao 5 (Daniel Carvalho).
 #
 # #####################################################################
 
@@ -290,7 +370,7 @@ def Teste_de_Fermat(n, base):
     existem compostos que passam para TODA base coprima a eles - os
     numeros de Carmichael, sendo 561 = 3 * 11 * 17 o menor deles.
     Por isso este teste sozinho nao serve para o RSA, e o Miller-Rabin
-    da PARTE 3 existe.
+    da secao 9 existe.
     """
     if n < 2:
         return False
@@ -323,7 +403,9 @@ def Eh_Provavelmente_Primo_Fermat(n, rodadas=10):
 
 # #####################################################################
 #
-#   PARTE 3 - APENDICE: MILLER-RABIN
+#   SECAO 9 - APENDICE: MILLER-RABIN
+#   Rafael de Castro
+#
 #   Conteudo de 1_RSA.pdf (slides 25 a 28), AINDA NAO DADO EM SALA.
 #   Incluido como preparacao para a geracao de chaves do RSA, onde os
 #   primos tem centenas de bits e Eh_Primo se torna inviavel.

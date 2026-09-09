@@ -5,33 +5,54 @@ base para os mecanismos criptográficos das próximas missões.
 
 ## Divisão do grupo
 
-| Integrante | Tópicos | Arquivo |
-|---|---|---|
-| Gabriel Vicentte | Aritmética modular, MDC, Algoritmo de Euclides | `Missoes.py` |
-| **Rafael de Castro** | **Função Phi de Euler, Números Primos** | **`Numeros_Primos_e_Phi.py`** |
-| Pedro Cardoso | Inverso multiplicativo, Algoritmo estendido de Euclides | *pendente* |
-| Daniel Carvalho | Exponenciação modular, Teorema Chinês do Resto | *pendente* |
+Tudo vive em um único arquivo: **`Missao01.py`**.
+
+| Integrante | Tópicos | Seção | Situação |
+|---|---|---|---|
+| Gabriel Vicentte | Aritmética modular, MDC, Algoritmo de Euclides | 1, 2, 3 | ✅ integrado |
+| Pedro Cardoso | Inverso multiplicativo, Euclides estendido | 4 | ⏳ pendente |
+| Daniel Carvalho | Exponenciação modular, Teorema Chinês do Resto | 5 | ⏳ pendente |
+| **Rafael de Castro** | **Função Phi de Euler, Números Primos** | **6, 7, 8, 9** | ✅ integrado |
 
 ## Dependências entre as partes
 
 ```
-Gabriel (MDC) ─────────────────► Rafael, PARTE 1 (Sao_Coprimos, Phi_por_Definicao)
-Daniel (Exponenciacao_Modular) ─► Rafael, PARTES 2 e 3 (Fermat, Miller-Rabin)
-Pedro  (Inverso_Multiplicativo) ► Gabriel (Divisao_Modular)
-Daniel (Exponenciacao_Modular) ─► Daniel (TCR)
+seção 2  MDC (Gabriel) ────────────► seção 6  Sao_Coprimos (Rafael)
+seção 5  Exp. modular (Daniel) ───► seções 8 e 9  Fermat e Miller-Rabin (Rafael)
+seção 4  Inverso mult. (Pedro) ───► seção 1  Divisao_Modular (Gabriel)
 ```
 
-O arquivo `Numeros_Primos_e_Phi.py` importa as funções dos colegas de
-`Missoes.py` quando elas existem, e usa substitutos temporários quando não.
-Ao integrar tudo em um único `Missoes.py`, os blocos `try/except ImportError`
-resolvem sozinhos — basta remover os substitutos.
+## Pendências antes da entrega
 
-**Pendência de integração:** `Exponenciacao_Modular` está usando o `pow()`
-nativo do Python como substituto. Precisa ser trocado pela implementação do
-Daniel (quadrado e multiplicação binária) antes da entrega, porque o produto
-da missão é implementar o algoritmo, não chamar a biblioteca padrão.
+Dois pontos ainda usam a biblioteca padrão do Python e estão marcados no
+código com `SUBSTITUTO TEMPORARIO`. Nenhum pode ficar assim: o produto da
+missão é **implementar** os algoritmos.
 
-Assinatura combinada: `Exponenciacao_Modular(base, expoente, modulo) -> int`
+| Onde | Hoje | Precisa virar | Responsável |
+|---|---|---|---|
+| Seção 5 — `Exponenciacao_Modular` | `pow(b, e, n)` | quadrado e multiplicação binária | Daniel |
+| Seção 1 — `Divisao_Modular` | `pow(b, -1, n)` | `Inverso_Multiplicativo(b, n)` | Pedro |
+
+Assinaturas combinadas:
+
+```python
+Exponenciacao_Modular(base, expoente, modulo) -> int
+Inverso_Multiplicativo(a, m) -> int
+Algoritmo_Estendido_de_Euclides(a, b) -> (d, alfa, beta)   # alfa*a + beta*b = d
+```
+
+Basta colar as implementações nas seções 4 e 5 e apagar os substitutos —
+o resto do arquivo já chama pelos nomes certos. A seção 12 dos testes avisa
+se algum substituto ainda estiver ativo.
+
+### Observações para o grupo
+
+- `MDC(60, -24)` devolve `-12`. O material afirma `gcd(60,-24) = 12` e
+  `gcd(a,0) = |a|` — falta um `abs()` no caso base.
+- `Algoritmo_de_Euclides` hoje é só `return MDC(a, b)`, e o `MDC` já *é* o
+  algoritmo de Euclides. Dois itens da tabela resolvidos pela mesma função.
+  Sugestão: `MDC` pela definição e `Algoritmo_de_Euclides` pelas divisões
+  sucessivas, comparando os dois.
 
 ## Aulas já dadas
 
@@ -49,7 +70,7 @@ O módulo é organizado conforme o conteúdo visto até agora:
 
 ## Funções entregues (Rafael)
 
-### PARTE 1 — Núcleo (conteúdo de sala, determinístico, sem dependências)
+### Seções 6 e 7 — Núcleo (conteúdo de sala, determinístico)
 
 | Função | O que faz | Depende de |
 |---|---|---|
@@ -63,13 +84,13 @@ O módulo é organizado conforme o conteúdo visto até agora:
 | `Conjunto_Z_Estrela(m)` | Lista os elementos de Z*ₘ | MDC |
 | `Phi_de_Produto_De_Primos(p,q)` | (p−1)(q−1) | — |
 
-**Nenhuma função desta parte depende do Daniel.** A entrega da Missão 1
-não trava se a exponenciação modular atrasar.
+**Nenhuma função destas seções depende do Daniel.** Os dois tópicos do
+Rafael ficam completos mesmo que a exponenciação modular atrase.
 
-### PARTE 2 — Aplicações dos teoremas de Fermat e Euler
+### Seção 8 — Aplicações dos teoremas de Fermat e Euler
 
 Os dois teoremas foram dados em sala, com demonstração. Usam a
-exponenciação modular, que também já foi vista.
+exponenciação modular da seção 5, que também já foi vista em aula.
 
 | Função | O que faz | Depende de |
 |---|---|---|
@@ -78,7 +99,7 @@ exponenciação modular, que também já foi vista.
 | `Teste_de_Fermat(n, base)` | Primalidade pela contrapositiva do teorema | **exp. modular** |
 | `Eh_Provavelmente_Primo_Fermat(n, r)` | Fermat com bases aleatórias | **exp. modular** |
 
-### PARTE 3 — Apêndice: Miller-Rabin (`1_RSA.pdf`, ainda não dado em sala)
+### Seção 9 — Apêndice: Miller-Rabin (`1_RSA.pdf`, ainda não dado em sala)
 
 | Função | O que faz |
 |---|---|

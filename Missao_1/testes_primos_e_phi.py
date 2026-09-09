@@ -2,11 +2,12 @@
 # Testes e demonstracao - Numeros Primos e Phi de Euler
 # Integrante: Rafael de Castro
 #
+# Testa a parte do Rafael dentro do arquivo unico Missao01.py.
 # Todos os valores esperados foram retirados do material da disciplina.
 # Execute com:  python testes_primos_e_phi.py
 # =====================================================================
 
-from Numeros_Primos_e_Phi import (
+from Missao01 import (
     Conjunto_Z_Estrela,
     Divisores,
     Eh_Primo,
@@ -22,6 +23,7 @@ from Numeros_Primos_e_Phi import (
     Phi_por_Definicao,
     Probabilidade_De_Ser_Primo,
     Rodadas_Recomendadas,
+    MDC,
     Sao_Coprimos,
     Teste_de_Fermat,
     Verifica_Teorema_de_Euler,
@@ -292,7 +294,27 @@ print("  phi(n)   =", Phi_de_Produto_De_Primos(p, q, verificar=False))
 
 
 # ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+secao("12. INTEGRACAO COM AS OUTRAS SECOES DO Missao01.py")
+
+# O MDC do Gabriel (secao 2) alimenta Sao_Coprimos (secao 6).
+assert MDC(26, 7) == 1
+assert MDC(300, 18) == 6
+print("MDC do Gabriel:  MDC(26,7) =", MDC(26, 7), "| MDC(300,18) =", MDC(300, 18))
+
+# Confirma que quem esta respondendo pela exponenciacao modular ainda
+# e o substituto temporario, e nao a implementacao do Daniel.
+import Missao01
+substituto = "SUBSTITUTO TEMPORARIO" in (Missao01.Exponenciacao_Modular.__doc__ or "")
+print("Exponenciacao_Modular:",
+      "SUBSTITUTO TEMPORARIO - falta a implementacao do Daniel"
+      if substituto else "implementacao do grupo integrada")
+
 print()
 print("=" * 68)
 print("TODOS OS TESTES PASSARAM.")
+if substituto:
+    print()
+    print("PENDENCIA: Exponenciacao_Modular ainda usa pow() da biblioteca")
+    print("padrao. Trocar pela implementacao do Daniel antes da entrega.")
 print("=" * 68)
